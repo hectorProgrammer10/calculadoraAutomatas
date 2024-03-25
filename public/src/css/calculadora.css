@@ -1,0 +1,58 @@
+.calculadoraCanva{
+  height: 95%;
+  width: 80%;
+}
+
+.pantalla{
+  height: 30%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: none;
+}
+#pantalla{
+  width: 97%;
+  background-color: rgb(50, 50, 50, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  overflow: auto;
+  margin: 2%;
+  overflow: auto;
+  height: 95%;
+}
+#resultadoOp{
+  position: absolute;
+  margin-top: 8%;
+  margin-left: 13%;
+  font-size: 1.5rem;
+}
+.teclas{
+  height: 70%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.btn{
+  height: 15%;
+  width: 100%;
+}
+.btn button{
+  height: 100%;
+  width: 100%;
+  font-size: 1.5rem;
+}
+.btn button:active{
+  background-color: rgb(50, 50, 50, 0.8);
+}
+.colums{
+  height: 96%;
+  width: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  
+}
