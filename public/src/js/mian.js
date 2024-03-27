@@ -10,7 +10,7 @@ function main() {
 main();
 let letras = [];
 let lineasXD = [];
-let numeros = "";
+let numerosTemp = [];
 const botones = document.querySelectorAll("button");
 let contador = -1;
 botones.forEach((boton) => {
@@ -58,39 +58,36 @@ botones.forEach((boton) => {
 
       letras.push(contenidoBoton);
       imprimir(pantalla);
-      // } else if (contenidoBoton == ".") {
-      //   // Inicializamos una cadena para almacenar los números
-      //   letras.push(contenidoBoton);
-      //   imprimir(pantalla);
-      //   letras.pop();
-      //   // Recorremos los elementos de 'letras' hasta encontrar un operador o paréntesis
-      //   while (letras.length > 0) {
-      //     let elemento = letras.pop();
-
-      //     // Verificamos si el elemento es un número o un punto decimal
-      //     if (!isNaN(elemento) || elemento === ".") {
-      //       // Si es un número o un punto decimal, lo agregamos a 'numeros'
-      //       numeros = elemento + numeros;
-      //       lineasXD.pop();
-      //       contador -= 1;
-      //       imprimirLexico();
-      //     } else {
-      //       // Si se encuentra un operador o paréntesis, detenemos el bucle
-      //       letras.push(elemento); // Restauramos el operador o paréntesis a 'letras'
-
-      //       break;
-      //     }
-      //   }
-
-      //   // Ahora 'numeros' contiene los números antes del punto
-
-      //   console.log("Números antes del punto:", numeros);
     } else {
-      if (!isNaN(contenidoBoton || ".")) {
-        contador += 1;
-        letras.push(contenidoBoton);
-        //lexico("INT", contenidoBoton);
-        imprimir(pantalla);
+      if (!isNaN(contenidoBoton) || contenidoBoton == ".") {
+        let aux = letras.pop();
+        let tipo = "INT";
+        if (tienePunto(aux) || contenidoBoton == ".") {
+          tipo = "FLOAT";
+        } else {
+          tipo = "INT";
+        }
+        if (!isNaN(aux)) {
+          aux = aux + contenidoBoton;
+          letras.push(aux);
+          lineasXD.pop();
+          lexico(tipo, aux);
+          imprimir(pantalla);
+        } else {
+          if (aux == null) {
+            //primer numero
+            contador += 1;
+            letras.push(contenidoBoton);
+            lexico(tipo, contenidoBoton);
+            imprimir(pantalla);
+          } else {
+            contador += 1;
+            letras.push(aux);
+            letras.push(contenidoBoton);
+            lexico(tipo, contenidoBoton);
+            imprimir(pantalla);
+          }
+        }
       }
     }
   });
@@ -135,4 +132,8 @@ function resultado(operacion) {
   let expresion = operacion.textContent.trim();
   let resultado = eval(expresion);
   imprimir.innerHTML = `&nbsp;${resultado}`;
+}
+
+function tienePunto(cadena) {
+  return /\./.test(cadena); // Utilizamos una expresión regular para buscar un punto decimal en la cadena
 }
