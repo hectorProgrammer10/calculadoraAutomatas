@@ -31,7 +31,9 @@
 }
 
 .arbol{
-
+  display: flex;
+  justify-content: center;
+  overflow: auto;
 }
 
 .cuadroTxt{

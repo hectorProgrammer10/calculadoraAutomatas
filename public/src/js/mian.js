@@ -1,16 +1,10 @@
-function main() {
-  let div = document.getElementById("resultado");
-  let div2 = document.getElementById("arbol");
-  let texto = `fewfwefefewfwefasfsfasfafsfsfsfsfffffffffffffffffffffffsasf`;
-  for (let i = 0; i <= 100; i++) {
-    div2.innerHTML += `${texto}+${texto}</br>`;
-  }
-}
-
-main();
 let letras = [];
 let lineasXD = [];
 let numerosTemp = [];
+let contadorLeft = 0;
+let contadorRight = 0;
+let contadorCenter = 0;
+let id = 0;
 const botones = document.querySelectorAll("button");
 let contador = -1;
 botones.forEach((boton) => {
@@ -136,4 +130,108 @@ function resultado(operacion) {
 
 function tienePunto(cadena) {
   return /\./.test(cadena); // Utilizamos una expresión regular para buscar un punto decimal en la cadena
+}
+arbol();
+
+function arbol() {
+  let nodo1 = {
+    num1: "(5.2)",
+    operador: "-",
+    num2: "*",
+  };
+  let nodo2 = {
+    num1: "*",
+    operador: "",
+    num2: "11",
+  };
+  let nodo3 = {
+    num1: "3",
+    operador: "",
+    num2: "9",
+  };
+
+  imprimirArbol(nodo1, "center");
+  imprimirArbol(nodo2, "right");
+  imprimirArbol(nodo3, "left");
+  imprimirArbol(nodo2, "right");
+  imprimirArbol(nodo2, "left");
+  imprimirArbol(nodo2, "right");
+  imprimirArbol(nodo3, "left");
+  imprimirArbol(nodo3, "right");
+}
+function imprimirArbol(nodo, place) {
+  imprimirNodo(nodo, place);
+}
+
+function imprimirNodo(nodo, pos) {
+  console.log(`nodo posición ${pos}`);
+  let arbolDiv = document.getElementById("arbol");
+  let nuevoEstilo = document.createElement("style");
+  let css;
+  let margin = "0rem";
+  //nodo center
+  if (pos == "center") {
+    arbolDiv.innerHTML = `<div class="nodo${pos}">${espacios(9)}${
+      nodo.operador
+    }</br>${espacios(3)}/${espacios(10)}\\<br>${espacios(0)}${
+      nodo.num1
+    }${espacios(8)}${nodo.num2}</div>`;
+  }
+  //nodo right
+  if (pos == "right") {
+    id += 1;
+    contadorRight += 1;
+    let aux = 3;
+    if (contadorLeft >= 1) {
+      contadorLeft -= 1;
+      margin = `${aux * contadorRight - 3}rem`;
+    } else {
+      margin = `${aux * contadorRight}rem`;
+    }
+    console.log("hay mas de un nodo right");
+
+    console.log(`${contadorRight}, contador r, margin: ${margin}`);
+    arbolDiv.innerHTML += `<div id="nodoRight${contadorRight}${id}">${espacios(
+      9
+    )}${nodo.operador}</br>${espacios(3)}/${espacios(10)}\\<br>${espacios(0)}${
+      nodo.num1
+    }${espacios(12)}${nodo.num2}</div>`;
+    css = `#nodoRight${contadorRight}${id} {margin-left: ${margin}}`;
+    nuevoEstilo.appendChild(document.createTextNode(css));
+    arbolDiv.appendChild(nuevoEstilo);
+  }
+  //nodo left
+  if (pos == "left") {
+    id += 1;
+    contadorLeft += 1;
+    let aux = 3;
+    if (contadorRight >= 1) {
+      contadorRight -= 1;
+      aux = aux * contadorRight - 3;
+      margin = `${aux}rem`;
+      console.log(
+        `el cR es mayor a 1:${contadorRight}, marg: ${margin} y cL: ${contadorLeft}`
+      );
+    } else {
+      aux = aux * contadorLeft * -1;
+      margin = `${aux}rem`;
+      console.log(`primer nodo left, marg:${margin}`);
+    }
+    arbolDiv.innerHTML += `<div id="nodoLeft${contadorLeft}${id}">${espacios(
+      9
+    )}${nodo.operador}</br>${espacios(3)}/${espacios(10)}\\<br>${espacios(0)}${
+      nodo.num1
+    }${espacios(12)}${nodo.num2}</div>`;
+    css = `#nodoLeft${contadorLeft}${id} {margin-left: ${margin}}`;
+    nuevoEstilo.appendChild(document.createTextNode(css));
+    arbolDiv.appendChild(nuevoEstilo);
+  }
+}
+
+function espacios(cantidad) {
+  let espacios = "";
+  for (let i = 0; i <= cantidad; i++) {
+    espacios += "&nbsp;";
+  }
+  return espacios;
 }
