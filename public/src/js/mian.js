@@ -5,6 +5,7 @@ let contadorLeft = 0;
 let contadorRight = 0;
 let contadorCenter = 0;
 let id = 0;
+let nodosArbol = [];
 const botones = document.querySelectorAll("button");
 let contador = -1;
 botones.forEach((boton) => {
@@ -23,6 +24,7 @@ botones.forEach((boton) => {
       imprimirLexico();
     } else if (contenidoBoton == "=") {
       resultado(pantalla);
+      arbol();
     } else if (contenidoBoton == "(" || contenidoBoton == ")") {
       letras.push(contenidoBoton);
       contador += 1;
@@ -90,9 +92,11 @@ botones.forEach((boton) => {
 function borrarTodo(pantalla) {
   let resultado = document.getElementById("resultadoOp");
   let lexico = document.getElementById("resultado");
+  let arbol = document.getElementById("arbol");
   lexico.innerHTML = "";
   pantalla.innerHTML = "";
   resultado.innerHTML = "";
+  arbol.innerHTML = "";
   letras = [];
   lineasXD = [];
   contador = -1;
@@ -134,37 +138,143 @@ function tienePunto(cadena) {
 arbol();
 
 function arbol() {
-  let nodo1 = {
-    num1: "(5.2)",
-    operador: "-",
-    num2: "*",
+  let haySigo = 0;
+  // ------------------                 3                   7         9
+  // let pruebaCadena = ["5.2", "-", "9", "*", "3", "*", "11"];
+  // let pruebaCadena = ["3", "*", "4", "+", "1", "*", "2"];
+  let pruebaCadena = letras;
+  let cadenaInfo = [];
+  let cadenaAux = [];
+  let jerarquia = ["*", "/", "+", "-"];
+  let posicion = ["center", "right", "left"];
+  let info = {
+    signo: "",
+    posicion: "",
   };
-  let nodo2 = {
-    num1: "*",
-    operador: "",
-    num2: "11",
-  };
-  let nodo3 = {
-    num1: "3",
-    operador: "",
-    num2: "9",
-  };
+  // Identificar los signos en la cadena y su posición   --- [3, 7, 9]
+  for (let i = 0; i < pruebaCadena.length; i++) {
+    let elemento = pruebaCadena[i];
 
-  imprimirArbol(nodo1, "center");
-  imprimirArbol(nodo2, "right");
-  imprimirArbol(nodo3, "left");
-  imprimirArbol(nodo2, "right");
-  imprimirArbol(nodo2, "left");
-  imprimirArbol(nodo2, "right");
-  imprimirArbol(nodo3, "left");
-  imprimirArbol(nodo3, "right");
-}
-function imprimirArbol(nodo, place) {
-  imprimirNodo(nodo, place);
+    if (
+      elemento === "+" ||
+      elemento === "-" ||
+      elemento === "*" ||
+      elemento === "/"
+    ) {
+      info = {
+        signo: elemento,
+        posicion: i,
+      };
+      cadenaInfo.push(info); //mapea los signos
+    }
+  }
+
+  // Ordenar los signos según su jerarquía   --- [7, 9, 3]
+  for (let a = 0; a < jerarquia.length; a++) {
+    let signoBuscado = jerarquia[a];
+    for (let i = 0; i < cadenaInfo.length; i++) {
+      let objeto = cadenaInfo[i];
+      if (objeto.signo === signoBuscado) {
+        //ordena por jerarquia los signos --0
+        let info2 = {
+          signo: objeto.signo,
+          posicion: objeto.posicion,
+        };
+        cadenaAux.push(info2);
+      }
+    }
+  }
+  //cade aux tiene la posicion por jerarquia. cadenaAux[0].signo/posicion
+
+  let nodo = {
+    num1: "",
+    operador: "",
+    num2: "",
+    posicion: "",
+  };
+  let cadenaAuxLength = cadenaAux.length;
+  while (cadenaAux.length > 0) {
+    let infoNodo = cadenaAux.pop(); //signo, posicion
+
+    // Determinar la posición del nodo en el árbol
+
+    ///-------------------------
+
+    console.log(pruebaCadena);
+    console.log(
+      `infoNodo = ${infoNodo.signo} y posicion sig = ${
+        pruebaCadena[infoNodo.posicion + 1]
+      }, hay signo? = ${haySigo}`
+    );
+    if (cadenaAux.length == cadenaAuxLength - 1) {
+      console.log("primer nodo");
+      //primer nodo
+      if (cadenaAuxLength > 1) {
+        if (infoNodo.posicion > pruebaCadena.length - infoNodo.posicion) {
+          nodo = {
+            num1: "",
+            operador: infoNodo.signo,
+            num2: pruebaCadena[infoNodo.posicion + 1],
+            posicion: posicion[0],
+          };
+          haySigo = 1;
+        } else {
+          nodo = {
+            num1: "",
+            operador: infoNodo.signo,
+            num2: pruebaCadena[infoNodo.posicion - 1],
+            posicion: posicion[0],
+          };
+          haySigo = 1;
+        }
+      } else {
+        nodo = {
+          num1: pruebaCadena[infoNodo.posicion - 1],
+          operador: infoNodo.signo,
+          num2: pruebaCadena[infoNodo.posicion + 1],
+          posicion: posicion[0],
+        };
+      }
+    } else {
+      console.log("otro nodo");
+      if (haySigo == 1) {
+        console.log("hay signo");
+        if (cadenaAux.length > 0) {
+          nodo = {
+            num1: "",
+            operador: infoNodo.signo,
+            num2: pruebaCadena[infoNodo.posicion + 1],
+            posicion: posicion[2],
+          };
+          haySigo = 1;
+        } else {
+          nodo = {
+            num1: pruebaCadena[infoNodo.posicion - 1],
+            operador: infoNodo.signo,
+            num2: pruebaCadena[infoNodo.posicion + 1],
+            posicion: posicion[2],
+          };
+          haySigo = 0;
+        }
+      } else {
+        console.log("no hay signo");
+        nodo = {
+          num1: "",
+          operador: infoNodo.signo,
+          num2: pruebaCadena[infoNodo.posicion + 1],
+          posicion: posicion[2],
+        };
+      }
+    }
+
+    imprimirArbol(nodo, nodo.posicion);
+  }
 }
 
-function imprimirNodo(nodo, pos) {
-  console.log(`nodo posición ${pos}`);
+//impresion de los nodos del arbol-----
+function imprimirArbol(nodo, pos) {
+  // console.log("nodo:" + nodo);
+  // console.log(`nodo posición ${pos}`);
   let arbolDiv = document.getElementById("arbol");
   let nuevoEstilo = document.createElement("style");
   let css;

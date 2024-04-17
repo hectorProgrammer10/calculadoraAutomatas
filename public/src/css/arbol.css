@@ -1,8 +1,16 @@
-.nodoright{
-  /* margin-left: 4rem; */
-}
+/* .nodoright{
+  /* margin-left: 4rem; 
+} */
 
 #arbol{
   height: 95%;
   font-size: 1.5rem;
+  margin-top: 1.7rem;
+  /* zoom: 60%; */
+  width: auto;
+  padding-left: 15rem;
 }
+/* #nodoLeft12{
+  margin-top: -5rem;
+  margin-left: -4rem !important;
+} */
